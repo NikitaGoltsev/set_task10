@@ -86,7 +86,7 @@ class FoldLayer():
         self.step = step
         self.sIx, self.sIy, self.sIc = sizeIn
         self.sOx, self.sOy, self.sOc = sizeOut
-        self.activatation = self.loss_f.ReLU()
+        self.activatation = self.loss_f.ReLU
 
         self.weights = []
         for _ in range(sizeOut[2]):
@@ -174,6 +174,6 @@ class Second_zd():
 
         return None
 
-fst = First_zd()
+#fst = First_zd()
 
 #snd = Second_zd()
