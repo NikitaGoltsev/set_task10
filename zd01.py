@@ -129,7 +129,7 @@ class First_zd():
 
     loss_f = Lost_Func()
 
-    def __init__(self) -> None:
+    def __init__(self, x:int = 1) -> None:
 
         
         #np.random.seed(100)
@@ -141,21 +141,26 @@ class First_zd():
         layer_2 = Layer((64, 16), [self.loss_f.ReLU, self.loss_f.tanh])
         layer_3 = Layer((16, 4), [self.loss_f.ReLU, self.loss_f.softMax])
 
-        conveyorFirstTask = [layer_1, layer_2, layer_3]
+        self.conveyorFirstTask = [layer_1, layer_2, layer_3]
 
-        result = inputs
-        for Layer in conveyorFirstTask:
-            result = Layer(result)
-        
-        print(result)
+        if(x == 1):
+            result = inputs
+            for Layer in self.conveyorFirstTask:
+                result = Layer(result)
+            
+            print(result)
         return None
+    
+    def get_conv(self):
+
+        return self.conveyorFirstTask
 
 # Second zd
 
 class Second_zd():
 
-    def __init__(self) -> None:
-
+    def __init__(self, x:int = 1) -> None:
+        
         inputs = np.random.randint(0, 255, size=(19,19,3))
 
         x1 = FoldLayer((19,19,3), (18,18,8), kernelSize=3, pad=0, step=1)
@@ -164,16 +169,52 @@ class Second_zd():
         x4 = MaxPoolLayer(2, 2)
 
 
-        conveyorSecondTask = [x1, x2, x3, x4]
-        data = inputs
-        print(data.shape)
-        for layer in conveyorSecondTask:
-            data = layer(data)
+        self.conveyorSecondTask = [x1, x2, x3, x4]
+        if( x == 1):
+            data = inputs
             print(data.shape)
+            for layer in self.conveyorSecondTask:
+                data = layer(data)
+                print(data.shape)
         
 
+        return None
+
+    def get_conv(self):
+
+        return self.conveyorSecondTask
+
+class Thrd_Zd():
+    #Here I need to add first and second classes to one
+    #also I need to use functions from Lost_func
+    fst_class = First_zd(x = 0)
+    scn_class = Second_zd(x = 0)
+
+    def __create_date__(self):
+
+        self.date = np.random.randint(0, 255, size=(19,19,3))
+        self.conveyorThirdTask = self.scn_class.get_conv() + [np.ravel] + self.scn_class.get_conv()
+        return None
+
+    def __init__(self) -> None:
+        self.__create_date__()
+        self.__out_cicle__()
+        return None
+
+    def __out_cicle__(self) -> None:
+        try:
+            for layer in self.conveyorThirdTask:
+                print(self.date.shape)
+                self.date = layer(self.date)
+            print(self.date.shape)
+            print(self.date)
+        except ValueError:
+            print('Problem with value')
+            
         return None
 
 #fst = First_zd()
 
 #snd = Second_zd()
+
+frd = Thrd_Zd()
