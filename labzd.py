@@ -46,7 +46,7 @@ class web_class():
     def __Fr_Propagation__(self) -> None:
         self.hidden_layer_activation = np.dot(self.inputs, self.hidden_weights)
         self.hidden_layer_activation += self.hidden_bias
-        self.hidden_layer_output = self.sg_Funcs.sigmoid(self.hidden_layer_activation)
+        self.hidden_layer_output = self.sg_Func.sigmoid(self.hidden_layer_activation)
         self.output_layer_activation = np.dot(self.hidden_layer_output, self.output_weights)
         self.output_layer_activation += self.output_bias
         self.predicted_output = self.sg_Func.sigmoid(self.output_layer_activation)
@@ -54,20 +54,20 @@ class web_class():
     
     def __Bc_Propagation__(self) -> None:
 
-        error = self.expected_output - self.predicted_output
-        d_predicted_output = error * self.sg_Func.sigmoid_derivative(self.predicted_output)
+        self.error = self.expected_output - self.predicted_output
+        self.d_predicted_output = self.error * self.sg_Func.sigmoid_derivative(self.predicted_output)
     
-        error_hidden_layer = d_predicted_output.dot(self.output_weights.T)
-        d_hidden_layer = error_hidden_layer * self.sg_Func.sigmoid_derivative(self.hidden_layer_output)
+        self.error_hidden_layer = self.d_predicted_output.dot(self.output_weights.T)
+        self.d_hidden_layer = self.error_hidden_layer * self.sg_Func.sigmoid_derivative(self.hidden_layer_output)
 
         return None
 
     def __W_update__(self):
 
-        output_weights += self.hidden_layer_output.T.dot(self.d_predicted_output) * self.lr
-        output_bias += np.sum(self.d_predicted_output,axis=0,keepdims=True) * self.lr
-        hidden_weights += self.inputs.T.dot(self.d_hidden_layer) * self.lr
-        hidden_bias += np.sum(self.d_hidden_layer,axis=0,keepdims=True) * self.lr
+        self.output_weights += self.hidden_layer_output.T.dot(self.d_predicted_output) * self.lr
+        self.output_bias += np.sum(self.d_predicted_output,axis=0,keepdims=True) * self.lr
+        self.hidden_weights += self.inputs.T.dot(self.d_hidden_layer) * self.lr
+        self.hidden_bias += np.sum(self.d_hidden_layer,axis=0,keepdims=True) * self.lr
 
         return None
     
@@ -97,3 +97,7 @@ class web_class():
 
         print("\nOutput from neural network after 10,000 epochs: ",end='')
         print(*self.predicted_output)
+
+main_class = web_class()
+main_class.learn_start()
+main_class.result()
